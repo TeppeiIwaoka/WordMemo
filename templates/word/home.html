@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-    {% endif %}
+    <form class="form-inline" action="{% url 'word:home' %}" method="get">
+        <div class="form-group mb-2">
+            <input class="form-control" type="search" name="search" placeholder="input a keyword">
+        </div>
+        <button class="btn btn-primary mb-2" type="submit">Search</button>
+    </form>
+
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Part of speech
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            {% for choice in choices %}
+                <li><a class="dropdown-item" href="{% url 'word:home' %}?type={{ choice.0 }}">{{ choice.1 }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
     <div class="d-flex justify-content-end">
         <a href="{% url 'word:add' %}">Add</a>
     </div>

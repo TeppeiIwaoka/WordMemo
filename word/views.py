@@ -2,7 +2,7 @@ import json
 import logging
 
 import requests
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView
@@ -26,7 +26,22 @@ class WordList(LoginRequiredMixin, ListView):
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
         queryset = queryset.filter(created_user=self.request.user)
+        if 'search' in self.request.GET:
+            filter_key_word = self.request.GET['search']
+            queryset = queryset.filter(word__contains=filter_key_word)
+        if 'type' in self.request.GET:
+            type = self.request.GET['type']
+            print(type)
+            print(self.model.part_of_speech)
+            queryset = queryset.filter(part_of_speech=type)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        choices = Word._meta.get_field('part_of_speech').choices
+        choices_list = [[choice[0], choice[1]] for choice in choices]
+        ctx['choices'] = choices_list
+        return ctx
 
 
 class WordAdd(CreateView):
@@ -58,13 +73,21 @@ class WordAdd(CreateView):
         return response_data["results"][0]["lexicalEntries"][0]["entries"][0]["senses"][0]["definitions"][0]
 
 
-class WordEdit(UpdateView):
+class WordEdit(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Word
     template_name = 'word/edit.html'
     fields = ('definition',)
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.created_user == self.request.user
 
-class WordDelete(DeleteView):
+
+class WordDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Word
     template_name = 'word/delete.html'
     success_url = reverse_lazy('word:home')
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.created_user == self.request.user
