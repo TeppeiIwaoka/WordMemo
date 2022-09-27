@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    {% endif %}
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'word:add' %}">Add</a>
+    </div>
+    {% for word in word_list %}
+        <div class="card">
+            <div class="text-center">
+                <h2>{{ word.word }} | {{ word.get_part_of_speech_display }}</h2>
+            </div>
+            <div class="card-body text-center">
+                {{ word.definition }}
+            </div>
+            <div class="card-footer text-center text-muted">
+                <a href="{% url 'word:edit' word.pk %}">Edit</a> | <a href="{% url 'word:delete' word.pk %}">Delete</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

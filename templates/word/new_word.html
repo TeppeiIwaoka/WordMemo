@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    {% if error_message %}
+        <p class="alert-danger"><strong>{{ error_message }}</strong></p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">Add</button>
+    </form>
+{% endblock content %}
