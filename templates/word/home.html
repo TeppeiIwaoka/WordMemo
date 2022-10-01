@@ -6,19 +6,20 @@
             <input class="form-control" type="search" name="search" placeholder="input a keyword">
         </div>
         <button class="btn btn-primary mb-2" type="submit">Search</button>
-    </form>
 
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                data-bs-toggle="dropdown" aria-expanded="false">
-            Part of speech
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            {% for choice in choices %}
-                <li><a class="dropdown-item" href="{% url 'word:home' %}?type={{ choice.0 }}">{{ choice.1 }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Part of speech
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                {% for choice in choices %}
+                    <li><a class="dropdown-item" href="{% url 'word:home' %}?type={{ choice.0 }}">{{ choice.1 }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </form>
     <div class="d-flex justify-content-end">
         <a href="{% url 'word:add' %}">Add</a>
     </div>
@@ -28,8 +29,13 @@
                 <h2>{{ word.word }} | {{ word.get_part_of_speech_display }}</h2>
             </div>
             <div class="card-body text-center">
-                {{ word.definition }}
+                Definition: {{ word.definition }}
             </div>
+            {% if word.sentences %}
+            <div class="card-body text-center">
+                Sentences: {{ word.sentences }}
+            </div>
+            {% endif %}
             <div class="card-footer text-center text-muted">
                 <a href="{% url 'word:edit' word.pk %}">Edit</a> | <a href="{% url 'word:delete' word.pk %}">Delete</a>
             </div>

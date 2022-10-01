@@ -27,13 +27,9 @@ class WordList(LoginRequiredMixin, ListView):
         queryset = super().get_queryset(**kwargs)
         queryset = queryset.filter(created_user=self.request.user)
         if 'search' in self.request.GET:
-            filter_key_word = self.request.GET['search']
-            queryset = queryset.filter(word__contains=filter_key_word)
+            queryset = queryset.filter(word__contains=self.request.GET['search'])
         if 'type' in self.request.GET:
-            type = self.request.GET['type']
-            print(type)
-            print(self.model.part_of_speech)
-            queryset = queryset.filter(part_of_speech=type)
+            queryset = queryset.filter(part_of_speech=self.request.GET['type'])
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -76,7 +72,7 @@ class WordAdd(CreateView):
 class WordEdit(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Word
     template_name = 'word/edit.html'
-    fields = ('definition',)
+    fields = ('definition', 'sentences',)
 
     def test_func(self):
         obj = self.get_object()

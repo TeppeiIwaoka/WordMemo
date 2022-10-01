@@ -16,7 +16,8 @@ class Word(models.Model):
     ]
     word = models.CharField(max_length=255)
     part_of_speech = models.CharField(max_length=255, choices=PART_OF_SPEECH)
-    definition = models.TextField('word', max_length=255)
+    definition = models.TextField(max_length=255)
+    sentences = models.TextField(max_length=255, null=True)
     created_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
