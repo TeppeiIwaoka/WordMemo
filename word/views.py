@@ -10,6 +10,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from environs import Env
 
 from .models import Word
+from .forms import WordForm
 
 env = Env()
 env.read_env()
@@ -43,8 +44,13 @@ class WordList(LoginRequiredMixin, ListView):
 class WordAdd(CreateView):
     model = Word
     template_name = 'word/new_word.html'
-    fields = ('word', 'part_of_speech')
+    form_class = WordForm
     success_url = reverse_lazy('word:home')
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         word = form.save(commit=False)
