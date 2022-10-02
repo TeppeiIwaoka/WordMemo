@@ -24,6 +24,7 @@ class WordList(LoginRequiredMixin, ListView):
     model = Word
     template_name = 'word/home.html'
     paginate_by = 5
+    ordering = ['-pk']
 
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
