@@ -1,9 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse
-from unittest import mock
-from unittest.mock import patch
-from word.views import WordAdd, DictionaryAPIException
 
 from .models import Word
 
