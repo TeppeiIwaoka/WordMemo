@@ -43,7 +43,7 @@ class WordList(LoginRequiredMixin, ListView):
         return ctx
 
 
-class WordAdd(CreateView):
+class WordAdd(LoginRequiredMixin, CreateView):
     model = Word
     template_name = 'word/new_word.html'
     form_class = WordForm
